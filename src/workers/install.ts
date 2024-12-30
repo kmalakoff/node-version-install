@@ -1,12 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import Queue from 'queue-cb';
-import { NODE, isWindows } from './constants.js';
+import { NODE, isWindows } from '../constants.js';
 
 import home from 'homedir-polyfill';
-import installPaths from './installPaths.js';
-const DEFAULT_INSTALL_DIRECTORY = path.join(home(), '.nvu');
-const DEFAULT_INSTALL_DIRECTORIES = installPaths(DEFAULT_INSTALL_DIRECTORY);
+import createPaths from '../createPaths.js';
+const DEFAULT_ROOT_PATH = path.join(home(), '.nvu');
+const DEFAULT_INSTALL_PATHS = createPaths(DEFAULT_ROOT_PATH);
 
 import Module from 'module';
 import lazy from 'lazy-cache';
@@ -14,10 +14,10 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 const resolveVersions = lazy(_require)('node-resolve-versions');
 const installRelease = lazy(_require)('node-install-release');
 
-import type { InstallOptions, InstallResult } from './types.js';
+import type { InstallOptions, InstallResult } from '../types.js';
 
-export default function worker(versionExpression: string, options: InstallOptions, callback) {
-  const { buildPath, cachePath, installPath: rootInstallPath } = options.installPath ? installPaths(options.installPath) : DEFAULT_INSTALL_DIRECTORIES;
+export default function installWorker(versionExpression: string, options: InstallOptions, callback) {
+  const { buildPath, cachePath, installPath: rootInstallPath } = options.installPath ? createPaths(options.installPath) : DEFAULT_INSTALL_PATHS;
 
   resolveVersions()(versionExpression, { ...options }, (err, versions) => {
     if (err) return callback(err);
@@ -25,28 +25,24 @@ export default function worker(versionExpression: string, options: InstallOption
 
     const results: InstallResult[] = [];
     const queue = new Queue(options.concurrency || 1);
-    versions.forEach((version) =>
-      queue.defer((callback) => {
+    versions.forEach((version) => {
+      queue.defer((cb) => {
         const installPath = path.join(rootInstallPath, version);
         const binRoot = isWindows ? installPath : path.join(installPath, 'bin');
         const execPath = path.join(binRoot, NODE);
 
         function done(err?) {
-          if (err) return callback(err);
+          if (err) return cb(err);
           results.push({ version, installPath, execPath });
-          callback();
+          cb();
         }
 
-        fs.stat(execPath, (err) => {
+        fs.stat(execPath, (_, stat) => {
           // TODO remove redundant options
-          err ? installRelease()(version, installPath, { cachePath, buildPath }, done) : done();
+          stat ? done() : installRelease()(version, installPath, { cachePath, buildPath }, done);
         });
-      })
-    );
-    queue.await((err) => {
-      if (err) return callback(err);
-      const result = versions.length === 1 ? results[0] : results;
-      callback(null, result);
+      });
     });
+    queue.await((err) => (err ? callback(err) : callback(null, results)));
   });
 }

@@ -15,4 +15,4 @@ export interface InstallOptions {
   concurrency?: number;
 }
 
-export type InstallCallback = (err?: Error, results?: InstallResult | InstallResult[]) => void;
+export type InstallCallback = (err?: Error, results?: InstallResult[]) => void;

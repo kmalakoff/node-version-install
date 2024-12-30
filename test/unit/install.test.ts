@@ -21,15 +21,9 @@ const OPTIONS = {
   cachePath: path.join(TMP_DIR, 'cache'),
   buildPath: path.join(TMP_DIR, 'build'),
 };
-// const VERSIONS = resolveVersions.sync('>=0.8', { range: 'major,even' });
-const VERSIONS = ['v4'];
-// const VERSIONS = ['v6'];
-// const VERSIONS = ['v16'];
 
-let TARGETS = [{ platform: 'darwin', arch: 'x64' }, { platform: 'linux', arch: 'x64' }, { platform: 'win32', arch: 'x64' }, {}];
-// TARGETS = [{}];
-// TARGETS = [{ platform: 'win32', arch: 'x64' }];
-TARGETS = [{ platform: 'darwin', arch: 'x64' }];
+const VERSIONS = ['v20'];
+const TARGETS = [{}, { arch: 'arm64' }, { arch: 'x64' }];
 
 function addTests(version, target) {
   const platform = target.platform || 'local';
@@ -52,7 +46,8 @@ function addTests(version, target) {
       const installPath = path.join(INSTALLED_DIR, `${version}-${platform}-${arch}`);
       install(version, { ...target, ...OPTIONS, installPath }, (err, results) => {
         assert.ok(!err, err ? err.message : '');
-        validateInstall(version, (results as InstallResult).installPath, target, done);
+        assert.ok(results.length === 1);
+        validateInstall(version, results[0].installPath, target, done);
       });
     });
 
@@ -60,7 +55,8 @@ function addTests(version, target) {
       const installPath = path.join(INSTALLED_DIR, `${version}-${platform}-${arch}-promise`);
 
       const results = await install(version, { ...target, ...OPTIONS, installPath });
-      await validateInstall(version, (results as InstallResult).installPath, target);
+      assert.ok(results.length === 1);
+      await validateInstall(version, results[0].installPath, target);
     });
   });
 }
@@ -78,7 +74,7 @@ describe('install (async)', () => {
       install('18,20', { installPath: path.join(INSTALLED_DIR, 'multiple'), concurrency: Infinity }, (err, results) => {
         if (err) return done(err);
         const queue = new Queue(1);
-        (results as InstallResult[]).forEach((result) => {
+        results.forEach((result) => {
           queue.defer(validateInstall.bind(null, result.version, result.installPath));
         });
         queue.await(done);
