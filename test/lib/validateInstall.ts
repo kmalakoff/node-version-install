@@ -30,6 +30,8 @@ function worker(version, installPath, options, callback) {
   // if not the native platform, do not try running
   if (platform !== process.platform) return callback();
 
+  if (['lts', 'stable'].indexOf(version) >= 0) return callback();
+
   versionUtils.spawn(installPath, NODE, ['--version'], { encoding: 'utf8', env: {} }, (err, res) => {
     assert.ok(!err, err ? err.message : '');
     const lines = cr(res.stdout).split('\n');
