@@ -39,7 +39,7 @@ export default function worker(versionExpression: string, options: InstallOption
 
         fs.stat(execPath, (err) => {
           // TODO remove redundant options
-          err ? installRelease()(version, installPath, { cachePath, buildPath, cacheDirectory: cachePath, buildDirectory: buildPath }, done) : done();
+          err ? installRelease()(version, installPath, { cachePath, buildPath }, done) : done();
         });
       })
     );

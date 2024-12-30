@@ -51,7 +51,7 @@
     "homedir-polyfill": "^1.0.3",
     "lazy-cache": "^2.0.2",
     "module-root-sync": "^0.1.1",
-    "node-install-release": "^1.5.2",
+    "node-install-release": "^1.6.0",
     "node-resolve-versions": "^1.0.5",
     "queue-cb": "^1.4.4"
   },
