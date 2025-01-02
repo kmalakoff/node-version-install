@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import Queue from 'queue-cb';
-import { NODE, isWindows } from '../constants.js';
+import { NODE, isWindows } from '../constants';
 
 import home from 'homedir-polyfill';
-import createPaths from '../createPaths.js';
+import createPaths from '../createPaths';
 const DEFAULT_ROOT_PATH = path.join(home(), '.nvu');
 const DEFAULT_INSTALL_PATHS = createPaths(DEFAULT_ROOT_PATH);
 
@@ -14,10 +14,10 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 const resolveVersions = lazy(_require)('node-resolve-versions');
 const installRelease = lazy(_require)('node-install-release');
 
-import type { InstallOptions, InstallResult } from '../types.js';
+import type { InstallOptions, InstallResult } from '../types';
 
-export default function installWorker(versionExpression: string, options: InstallOptions, callback) {
-  const { buildPath, cachePath, installPath: rootInstallPath } = options.installPath ? createPaths(options.installPath) : DEFAULT_INSTALL_PATHS;
+export default function installWorker(versionExpression: string, rootInstallPath, options: InstallOptions, callback) {
+  const { buildPath, cachePath } = options.cachePath ? createPaths(options.cachePath) : DEFAULT_INSTALL_PATHS;
 
   resolveVersions()(versionExpression, { ...options }, (err, versions) => {
     if (err) return callback(err);
@@ -31,9 +31,8 @@ export default function installWorker(versionExpression: string, options: Instal
         const binRoot = isWindows ? installPath : path.join(installPath, 'bin');
         const execPath = path.join(binRoot, NODE);
 
-        function done(err?) {
-          if (err) return cb(err);
-          results.push({ version, installPath, execPath });
+        function done(error?) {
+          results.push({ version, installPath, execPath, error });
           cb();
         }
 

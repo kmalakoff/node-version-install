@@ -28,7 +28,7 @@ function addTests(version, target) {
   describe(`${version} (${platform},${arch})`, () => {
     it('dist', (done) => {
       const installPath = path.join(INSTALLED_DIR, `${version}-${platform}-${arch}`);
-      const results = sync(version, { ...target, ...OPTIONS, installPath });
+      const results = sync(version, installPath, { ...target, ...OPTIONS });
       assert.ok(results.length === 1);
       validateInstall(version, results[0].installPath, target, done);
     });
@@ -37,6 +37,7 @@ function addTests(version, target) {
 
 describe('install (sync)', () => {
   before((cb) => rimraf2(TMP_DIR, { disableGlob: true }, cb.bind(null, null)));
+  after((cb) => rimraf2(TMP_DIR, { disableGlob: true }, cb.bind(null, null)));
 
   for (let i = 0; i < VERSIONS.length; i++) {
     for (let j = 0; j < TARGETS.length; j++) {
@@ -45,7 +46,7 @@ describe('install (sync)', () => {
 
     describe('multiple', () => {
       it('should install 18,20', (done) => {
-        const results = sync('18,20', { installPath: path.join(INSTALLED_DIR, 'multiple'), concurrency: Infinity });
+        const results = sync('18,20', path.join(INSTALLED_DIR, 'multiple'), { concurrency: Infinity });
         const queue = new Queue(1);
         results.forEach((result) => {
           queue.defer(validateInstall.bind(null, result.version, result.installPath));
