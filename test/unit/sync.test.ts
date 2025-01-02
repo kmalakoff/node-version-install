@@ -15,8 +15,7 @@ const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLTo
 const TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 const INSTALLED_DIR = path.join(TMP_DIR, 'installed');
 const OPTIONS = {
-  cachePath: path.join(TMP_DIR, 'cache'),
-  buildPath: path.join(TMP_DIR, 'build'),
+  storagePath: TMP_DIR,
 };
 const VERSIONS = ['v4', 'v18', 'lts'];
 const TARGETS = [{}];
@@ -28,9 +27,9 @@ function addTests(version, target) {
   describe(`${version} (${platform},${arch})`, () => {
     it('dist', (done) => {
       const installPath = path.join(INSTALLED_DIR, `${version}-${platform}-${arch}`);
-      const results = sync(version, installPath, { ...target, ...OPTIONS });
+      const results = sync(version, { installPath, ...target, ...OPTIONS });
       assert.ok(results.length === 1);
-      validateInstall(version, results[0].installPath, target, done);
+      validateInstall(results[0].version, results[0].installPath, target, done);
     });
   });
 }
@@ -46,7 +45,7 @@ describe('install (sync)', () => {
 
     describe('multiple', () => {
       it('should install 18,20', (done) => {
-        const results = sync('18,20', path.join(INSTALLED_DIR, 'multiple'), { concurrency: Infinity });
+        const results = sync('18,20', { storagePath: path.join(INSTALLED_DIR, 'multiple'), concurrency: Infinity });
         const queue = new Queue(1);
         results.forEach((result) => {
           queue.defer(validateInstall.bind(null, result.version, result.installPath));
