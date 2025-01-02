@@ -10,17 +10,15 @@ import url from 'url';
 import rimraf2 from 'rimraf2';
 
 // @ts-ignore
-import install, { type InstallResult } from 'node-version-install';
+import install from 'node-version-install';
 import validateInstall from '../lib/validateInstall';
 
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
 const TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 const INSTALLED_DIR = path.join(TMP_DIR, 'installed');
 const OPTIONS = {
-  cachePath: path.join(TMP_DIR, 'cache'),
-  buildPath: path.join(TMP_DIR, 'build'),
+  storagePath: TMP_DIR,
 };
-
 const VERSIONS = ['v20'];
 const TARGETS = [{}, { arch: 'arm64' }, { arch: 'x64' }];
 
@@ -45,19 +43,19 @@ function addTests(version, target) {
 
     it('dist', (done) => {
       const installPath = path.join(INSTALLED_DIR, `${version}-${platform}-${arch}`);
-      install(version, installPath, { ...target, ...OPTIONS }, (err, results) => {
+      install(version, { installPath, ...target, ...OPTIONS }, (err, results) => {
         assert.ok(!err, err ? err.message : '');
         assert.ok(results.length === 1);
-        validateInstall(version, results[0].installPath, target, done);
+        validateInstall(results[0].version, results[0].installPath, target, done);
       });
     });
 
     it('promise', async () => {
       const installPath = path.join(INSTALLED_DIR, `${version}-${platform}-${arch}-promise`);
 
-      const results = await install(version, installPath, { ...target, ...OPTIONS });
+      const results = await install(version, { installPath, ...target, ...OPTIONS });
       assert.ok(results.length === 1);
-      await validateInstall(version, results[0].installPath, target);
+      await validateInstall(results[0].version, results[0].installPath, target);
     });
   });
 }
@@ -73,7 +71,8 @@ describe('install (async)', () => {
   }
   describe('multiple', () => {
     it('should install 18,20', (done) => {
-      install('18,20', path.join(INSTALLED_DIR, 'multiple'), { concurrency: Infinity }, (err, results) => {
+      const installPath = path.join(INSTALLED_DIR, 'multiple');
+      install('18,20', { installPath, concurrency: Infinity }, (err, results) => {
         if (err) return done(err);
         const queue = new Queue(1);
         results.forEach((result) => {

@@ -1,17 +1,10 @@
-export type CacheLocations = {
-  cachePath: string;
-  buildPath: string;
-};
+import type { InstallOptions as InstallOptionsBase, InstallResult as InstallResultBase } from 'node-install-release';
 
-export type InstallResult = {
-  version: string;
-  installPath: string;
-  execPath: string;
+export interface InstallResult extends InstallResultBase {
   error?: Error;
-};
+}
 
-export interface InstallOptions {
-  cachePath?: string;
+export interface InstallOptions extends InstallOptionsBase {
   concurrency?: number;
 }
 
