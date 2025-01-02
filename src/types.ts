@@ -1,17 +1,17 @@
-export type InstallPaths = {
+export type CacheLocations = {
   cachePath: string;
   buildPath: string;
-  installPath: string;
 };
 
 export type InstallResult = {
   version: string;
   installPath: string;
   execPath: string;
+  error?: Error;
 };
 
 export interface InstallOptions {
-  installPath?: string;
+  cachePath?: string;
   concurrency?: number;
 }
 
