@@ -1,11 +1,10 @@
 import path from 'path';
 
-import type { InstallPaths } from './types.js';
+import type { CacheLocations } from './types';
 
-export default function createPaths(installPath: string): InstallPaths {
+export default function createPaths(installPath: string): CacheLocations {
   return {
     cachePath: path.join(installPath, 'cache'),
     buildPath: path.join(installPath, 'build'),
-    installPath: path.join(installPath, 'installed'),
   };
 }

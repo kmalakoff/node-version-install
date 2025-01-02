@@ -1,8 +1,7 @@
 // remove NODE_OPTIONS from ts-dev-stack
 delete process.env.NODE_OPTIONS;
 
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
+import Pinkie from 'pinkie-promise';
 import Queue from 'queue-cb';
 
 import assert from 'assert';
@@ -32,10 +31,12 @@ function addTests(version, target) {
   describe(`${version} (${platform},${arch})`, () => {
     (() => {
       // patch and restore promise
+      // @ts-ignore
       let rootPromise: Promise;
       before(() => {
         rootPromise = global.Promise;
-        global.Promise = Promise;
+        // @ts-ignore
+        global.Promise = Pinkie;
       });
       after(() => {
         global.Promise = rootPromise;
@@ -44,7 +45,7 @@ function addTests(version, target) {
 
     it('dist', (done) => {
       const installPath = path.join(INSTALLED_DIR, `${version}-${platform}-${arch}`);
-      install(version, { ...target, ...OPTIONS, installPath }, (err, results) => {
+      install(version, installPath, { ...target, ...OPTIONS }, (err, results) => {
         assert.ok(!err, err ? err.message : '');
         assert.ok(results.length === 1);
         validateInstall(version, results[0].installPath, target, done);
@@ -54,7 +55,7 @@ function addTests(version, target) {
     it('promise', async () => {
       const installPath = path.join(INSTALLED_DIR, `${version}-${platform}-${arch}-promise`);
 
-      const results = await install(version, { ...target, ...OPTIONS, installPath });
+      const results = await install(version, installPath, { ...target, ...OPTIONS });
       assert.ok(results.length === 1);
       await validateInstall(version, results[0].installPath, target);
     });
@@ -63,6 +64,7 @@ function addTests(version, target) {
 
 describe('install (async)', () => {
   before((cb) => rimraf2(TMP_DIR, { disableGlob: true }, cb.bind(null, null)));
+  after((cb) => rimraf2(TMP_DIR, { disableGlob: true }, cb.bind(null, null)));
 
   for (let i = 0; i < VERSIONS.length; i++) {
     for (let j = 0; j < TARGETS.length; j++) {
@@ -71,7 +73,7 @@ describe('install (async)', () => {
   }
   describe('multiple', () => {
     it('should install 18,20', (done) => {
-      install('18,20', { installPath: path.join(INSTALLED_DIR, 'multiple'), concurrency: Infinity }, (err, results) => {
+      install('18,20', path.join(INSTALLED_DIR, 'multiple'), { concurrency: Infinity }, (err, results) => {
         if (err) return done(err);
         const queue = new Queue(1);
         results.forEach((result) => {
