@@ -31,6 +31,13 @@ function addTests(version, target) {
       assert.ok(results.length === 1);
       validateInstall(results[0].version, results[0].installPath, target, done);
     });
+
+    it('dist x 2', (done) => {
+      const installPath = path.join(INSTALLED_DIR, `${version}-${platform}-${arch}`);
+      const results = sync(version, { installPath, ...target, ...OPTIONS });
+      assert.ok(results.length === 1);
+      validateInstall(results[0].version, results[0].installPath, target, done);
+    });
   });
 }
 
