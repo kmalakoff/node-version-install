@@ -1,6 +1,6 @@
 {
   "name": "node-version-install",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Install NodeJs by version string asynchronously or synchronously",
   "keywords": [
     "node",
@@ -51,7 +51,7 @@
     "homedir-polyfill": "^1.0.3",
     "lazy-cache": "^2.0.2",
     "module-root-sync": "^0.1.1",
-    "node-install-release": "^1.7.7",
+    "node-install-release": "^1.7.10",
     "node-resolve-versions": "^1.0.5",
     "queue-cb": "^1.4.4"
   },
