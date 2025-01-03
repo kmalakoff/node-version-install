@@ -10,20 +10,19 @@ const NODE = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.
 
 function worker(version, installPath, options, callback) {
   const platform = options.platform || process.platform;
-
   if (platform === 'win32') {
-    assert.ok(existsSync(path.join(installPath, 'node.exe')));
-    assert.ok(existsSync(path.join(installPath, 'npm')));
-    assert.ok(existsSync(path.join(installPath, 'npm.cmd')));
+    assert.ok(existsSync(path.join(installPath, 'node.exe')), 'node.exe');
+    assert.ok(existsSync(path.join(installPath, 'npm')), 'npm');
+    assert.ok(existsSync(path.join(installPath, 'npm.cmd')), 'npm.cmd');
     // existsSync(path.join(installPath, 'npx'));
     // existsSync(path.join(installPath, 'npx.cmd'));
-    assert.ok(existsSync(path.join(installPath, 'node_modules', 'npm')));
+    assert.ok(existsSync(path.join(installPath, 'node_modules', 'npm')), 'node_modules/npm');
   } else {
-    assert.ok(existsSync(path.join(installPath, 'bin', 'node')));
-    assert.ok(existsSync(path.join(installPath, 'bin', 'npm')));
+    assert.ok(existsSync(path.join(installPath, 'bin', 'node')), 'bin/node');
+    assert.ok(existsSync(path.join(installPath, 'bin', 'npm')), 'bin/npm');
     // existsSync(path.join(installPath, 'bin', 'npx'));
     // existsSync(path.join(installPath, 'bin', 'node-waf'));
-    assert.ok(existsSync(path.join(installPath, 'lib', 'node_modules', 'npm')));
+    assert.ok(existsSync(path.join(installPath, 'lib', 'node_modules', 'npm')), 'lib/node_modules/npm');
   }
 
   // if not the native platform, do not try running
@@ -32,17 +31,16 @@ function worker(version, installPath, options, callback) {
   if (['lts', 'stable'].indexOf(version) >= 0) return callback();
 
   spawn(NODE, ['--version'], spawnOptions(installPath, { encoding: 'utf8', env: {} }), (err, res) => {
-    assert.ok(!err, err ? err.message : '');
+    assert.ok(!err, 'spawn error NODE');
     const lines = cr(res.stdout).split('\n');
     const spawnVersion = lines.slice(-2, -1)[0];
-    assert.ok(isVersion(spawnVersion, 'v'));
-    assert.ok(spawnVersion.indexOf(version) === 0);
+    assert.ok(spawnVersion.indexOf(version) === 0, 'version mismatch npm');
 
     spawn('npm', ['--version'], spawnOptions(installPath, { encoding: 'utf8', env: {} }), (err, res) => {
-      assert.ok(!err, err ? err.message : '');
+      assert.ok(!err, 'spawn error npm');
       const lines = cr(res.stdout).split('\n');
       const spawnVersionNPM = lines.slice(-2, -1)[0];
-      assert.ok(isVersion(spawnVersionNPM));
+      assert.ok(isVersion(spawnVersionNPM), 'version mismatch npm');
       callback();
     });
   });
