@@ -11,6 +11,7 @@ const NODE = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.
 
 function worker(version, installPath, options, callback) {
   const platform = options.platform || process.platform;
+
   if (platform === 'win32') {
     assert.ok(existsSync(path.join(installPath, 'node.exe')), `node.exe ${fs.readdirSync(installPath)}`);
     assert.ok(existsSync(path.join(installPath, 'npm')), `npm ${fs.readdirSync(installPath)}`);
@@ -32,13 +33,13 @@ function worker(version, installPath, options, callback) {
   if (['lts', 'stable'].indexOf(version) >= 0) return callback();
 
   spawn(NODE, ['--version'], spawnOptions(installPath, { encoding: 'utf8', env: {} }), (err, res) => {
-    assert.ok(!err, 'spawn error NODE');
+    assert.ok(!err, `node spawn error: ${JSON.stringify({ err, res })}`);
     const lines = cr(res.stdout).split('\n');
     const spawnVersion = lines.slice(-2, -1)[0];
     assert.ok(spawnVersion.indexOf(version) === 0, 'version mismatch npm');
 
     spawn('npm', ['--version'], spawnOptions(installPath, { encoding: 'utf8', env: {} }), (err, res) => {
-      assert.ok(!err, 'spawn error npm');
+      assert.ok(!err, `npm spawn error: ${JSON.stringify({ err, res })}`);
       const lines = cr(res.stdout).split('\n');
       const spawnVersionNPM = lines.slice(-2, -1)[0];
       assert.ok(isVersion(spawnVersionNPM), 'version mismatch npm');
