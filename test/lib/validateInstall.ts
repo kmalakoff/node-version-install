@@ -1,4 +1,5 @@
 import assert from 'assert';
+import fs from 'fs';
 import path from 'path';
 import cr from 'cr';
 import spawn from 'cross-spawn-cb';
@@ -11,18 +12,18 @@ const NODE = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.
 function worker(version, installPath, options, callback) {
   const platform = options.platform || process.platform;
   if (platform === 'win32') {
-    assert.ok(existsSync(path.join(installPath, 'node.exe')), 'node.exe');
-    assert.ok(existsSync(path.join(installPath, 'npm')), 'npm');
-    assert.ok(existsSync(path.join(installPath, 'npm.cmd')), 'npm.cmd');
+    assert.ok(existsSync(path.join(installPath, 'node.exe')), `node.exe ${fs.readdirSync(installPath)}`);
+    assert.ok(existsSync(path.join(installPath, 'npm')), `npm ${fs.readdirSync(installPath)}`);
+    assert.ok(existsSync(path.join(installPath, 'npm.cmd')), `npm.cmd ${fs.readdirSync(installPath)}`);
     // existsSync(path.join(installPath, 'npx'));
     // existsSync(path.join(installPath, 'npx.cmd'));
-    assert.ok(existsSync(path.join(installPath, 'node_modules', 'npm')), 'node_modules/npm');
+    assert.ok(existsSync(path.join(installPath, 'node_modules', 'npm')), `node_modules/npm ${fs.readdirSync(path.join(installPath, 'node_modules'))}`);
   } else {
-    assert.ok(existsSync(path.join(installPath, 'bin', 'node')), 'bin/node');
-    assert.ok(existsSync(path.join(installPath, 'bin', 'npm')), 'bin/npm');
+    assert.ok(existsSync(path.join(installPath, 'bin', 'node')), `bin/node ${fs.readdirSync(path.join(installPath, 'bin'))}`);
+    assert.ok(existsSync(path.join(installPath, 'bin', 'npm')), `bin/npm ${fs.readdirSync(path.join(installPath, 'bin'))}`);
     // existsSync(path.join(installPath, 'bin', 'npx'));
     // existsSync(path.join(installPath, 'bin', 'node-waf'));
-    assert.ok(existsSync(path.join(installPath, 'lib', 'node_modules', 'npm')), 'lib/node_modules/npm');
+    assert.ok(existsSync(path.join(installPath, 'lib', 'node_modules', 'npm')), `lib/node_modules/npm ${fs.readdirSync(path.join(installPath, 'lib', 'node_modules'))}`);
   }
 
   // if not the native platform, do not try running

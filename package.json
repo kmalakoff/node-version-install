@@ -41,6 +41,7 @@
   "scripts": {
     "build": "tsds build",
     "deploy": "tsds deploy",
+    "docs": "tsds docs",
     "format": "biome check --write --unsafe src/ test/",
     "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines npm run test",
@@ -51,7 +52,7 @@
     "homedir-polyfill": "^1.0.3",
     "lazy-cache": "^2.0.2",
     "module-root-sync": "^0.1.1",
-    "node-install-release": "^1.7.11",
+    "node-install-release": "^1.8.0",
     "node-resolve-versions": "^1.0.5",
     "queue-cb": "^1.4.4"
   },
