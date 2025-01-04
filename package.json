@@ -48,12 +48,12 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "function-exec-sync": "^1.1.6",
+    "function-exec-sync": "^1.1.8",
     "homedir-polyfill": "^1.0.3",
     "lazy-cache": "^2.0.2",
     "node-install-release": "^1.8.1",
     "node-resolve-versions": "^1.0.5",
-    "queue-cb": "^1.4.4"
+    "queue-cb": "^1.4.7"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
