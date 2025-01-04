@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import url from 'url';
-import moduleRoot from 'module-root-sync';
 
 import home from 'homedir-polyfill';
 import { createResult } from 'node-install-release';
@@ -16,8 +15,8 @@ const execFunction = lazy(_require)('function-exec-sync');
 
 const SLEEP_MS = 200;
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
-const root = moduleRoot(__dirname);
-const workerPath = path.join(root, 'dist', 'cjs', 'workers', 'install.cjs');
+const dist = path.join(__dirname, '..', '..');
+const workerPath = path.join(dist, 'cjs', 'workers', 'install.cjs');
 
 export default function installSyncWorker(versionExpression: string, options) {
   try {
