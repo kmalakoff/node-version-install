@@ -48,7 +48,7 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "function-exec-sync": "^1.1.11",
+    "function-exec-sync": "^1.1.12",
     "homedir-polyfill": "^1.0.3",
     "lazy-cache": "^2.0.2",
     "node-install-release": "^1.8.5",
