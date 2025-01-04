@@ -51,19 +51,19 @@
     "function-exec-sync": "^1.1.12",
     "homedir-polyfill": "^1.0.3",
     "lazy-cache": "^2.0.2",
-    "node-install-release": "^1.8.9",
+    "node-install-release": "^1.9.0",
     "node-resolve-versions": "^1.0.10",
-    "queue-cb": "^1.4.9"
+    "queue-cb": "^1.4.10"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.2",
     "cr": "^0.1.0",
-    "cross-spawn-cb": "^2.0.4",
+    "cross-spawn-cb": "^2.0.13",
     "fs-exists-sync": "^0.1.0",
-    "is-version": "^0.2.1",
-    "node-version-utils": "^1.2.1",
+    "is-version": "^0.2.5",
+    "node-version-utils": "^1.2.4",
     "pinkie-promise": "^2.0.1",
     "rimraf2": "^2.8.2"
   },
