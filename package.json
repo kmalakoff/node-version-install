@@ -52,7 +52,7 @@
     "homedir-polyfill": "^1.0.3",
     "lazy-cache": "^2.0.2",
     "node-install-release": "^1.8.7",
-    "node-resolve-versions": "^1.0.9",
+    "node-resolve-versions": "^1.0.10",
     "queue-cb": "^1.4.9"
   },
   "devDependencies": {
