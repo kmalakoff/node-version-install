@@ -44,7 +44,7 @@ function addTests(version, target) {
     it('dist', (done) => {
       const installPath = path.join(INSTALLED_DIR, `${version}-${platform}-${arch}`);
       install(version, { installPath, ...target, ...OPTIONS }, (err, results) => {
-        assert.ok(!err, err ? err.message : '');
+        if (err) return done(err);
         assert.ok(results.length === 1);
         validateInstall(results[0].version, results[0].installPath, target, done);
       });
