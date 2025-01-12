@@ -20,7 +20,7 @@ const OPTIONS = {
   storagePath: TMP_DIR,
 };
 const VERSIONS = ['v20'];
-const TARGETS = [{}, { arch: 'arm64' }, { arch: 'x64' }];
+const TARGETS = [{}, { platform: 'win32', arch: 'x64' }, { platform: 'linux', arch: 'x64' }, { platform: 'darwin', arch: 'arm64' }];
 
 function addTests(version, target) {
   const platform = target.platform || 'local';
