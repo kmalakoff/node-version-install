@@ -43,10 +43,10 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "function-exec-sync": "^1.2.5",
+    "function-exec-sync": "^1.2.8",
     "homedir-polyfill": "^1.0.3",
-    "node-install-release": "^1.9.2",
-    "node-resolve-versions": "^1.0.10",
+    "node-install-release": "^1.9.4",
+    "node-resolve-versions": "^1.0.11",
     "queue-cb": "^1.4.11"
   },
   "devDependencies": {
@@ -54,10 +54,10 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.5",
     "cr": "^0.1.0",
-    "cross-spawn-cb": "^2.1.2",
+    "cross-spawn-cb": "^2.1.4",
     "fs-exists-sync": "^0.1.0",
     "is-version": "^0.2.7",
-    "node-version-utils": "^1.2.4",
+    "node-version-utils": "^1.2.5",
     "pinkie-promise": "^2.0.1",
     "rimraf2": "^2.8.2"
   },
