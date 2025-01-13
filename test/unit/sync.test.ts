@@ -8,7 +8,7 @@ import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 
 // @ts-ignore
-import { type InstallResult, sync } from 'node-version-install';
+import { sync } from 'node-version-install';
 import validateInstall from '../lib/validateInstall';
 
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
@@ -18,7 +18,7 @@ const OPTIONS = {
   storagePath: TMP_DIR,
 };
 const VERSIONS = ['v4', 'v18', 'lts'];
-const TARGETS = [{}];
+const TARGETS = [{ arch: 'x64' }];
 
 function addTests(version, target) {
   const platform = target.platform || 'local';
