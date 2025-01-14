@@ -25,8 +25,7 @@ export default function installSyncWorker(versionExpression: string, options) {
       const storagePath = options.storagePath || DEFAULT_STORAGE_PATH;
       options = { storagePath, ...options };
 
-      const versionOptions = { name: version, ...options };
-      const result = createResult(versionOptions, version);
+      const result = createResult({ name: version, ...options }, version);
 
       fs.statSync(result.execPath);
       return [result];
