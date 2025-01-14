@@ -28,16 +28,18 @@ import { spawnOptions } from 'node-version-utils';
 import validate from '../lib/validate';
 
 // @ts-ignore
-import { sync as installSync } from 'node-version-install';
+import install from 'node-version-install';
 
 function addTests(version) {
   describe(version, () => {
     let installPath = null;
-    it('install', () => {
-      const res = installSync(version, { name: version, ...OPTIONS });
-      if (res) installPath = res[0].installPath;
-      if (res) version = res[0].version;
-      validate(installPath, OPTIONS);
+    it('install', (done) => {
+      install(version, { name: version, ...OPTIONS }, (err, res) => {
+        if (res) installPath = res[0].installPath;
+        if (res) version = res[0].version;
+        validate(installPath, OPTIONS);
+        done(err);
+      });
     });
 
     it('npm --version', (done) => {
@@ -61,7 +63,7 @@ function addTests(version) {
   });
 }
 
-describe('sync', () => {
+describe('callback', () => {
   before((cb) => rimraf2(TMP_DIR, { disableGlob: true }, cb.bind(null, null)));
   after((cb) => rimraf2(TMP_DIR, { disableGlob: true }, cb.bind(null, null)));
 
