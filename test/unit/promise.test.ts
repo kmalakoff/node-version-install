@@ -1,5 +1,6 @@
 // remove NODE_OPTIONS from ts-dev-stack
 delete process.env.NODE_OPTIONS;
+import Pinkie from 'pinkie-promise';
 
 import assert from 'assert';
 import path from 'path';
@@ -28,13 +29,26 @@ import { spawnOptions } from 'node-version-utils';
 import validate from '../lib/validate';
 
 // @ts-ignore
-import { sync as installSync } from 'node-version-install';
+import install from 'node-version-install';
 
 function addTests(version) {
   describe(version, () => {
+    (() => {
+      // patch and restore promise
+      // @ts-ignore
+      let rootPromise: Promise;
+      before(() => {
+        rootPromise = global.Promise;
+        global.Promise = Pinkie;
+      });
+      after(() => {
+        global.Promise = rootPromise;
+      });
+    })();
+
     let installPath = null;
-    it('install', () => {
-      const res = installSync(version, { name: version, ...OPTIONS });
+    it('install', async () => {
+      const res = await install(version, { name: version, ...OPTIONS });
       if (res) installPath = res[0].installPath;
       if (res) version = res[0].version;
       validate(installPath, OPTIONS);
@@ -61,7 +75,7 @@ function addTests(version) {
   });
 }
 
-describe('sync', () => {
+describe('promise', () => {
   before((cb) => rimraf2(TMP_DIR, { disableGlob: true }, cb.bind(null, null)));
   after((cb) => rimraf2(TMP_DIR, { disableGlob: true }, cb.bind(null, null)));
 
