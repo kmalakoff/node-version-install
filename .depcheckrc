@@ -1,1 +1,1 @@
-ignores: ["node-version-install", "depcheck", "@types/*", "@biomejs/*", "function-exec-sync", "node-install-release", "node-resolve-versions", "node-version-utils"]
+ignores: ["@types/*", "node-version-install", "depcheck", "@biomejs/*", "function-exec-sync", "node-install-release", "node-resolve-versions", "node-version-utils"]
