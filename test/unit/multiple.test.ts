@@ -19,7 +19,7 @@ const OPTIONS = {
 
 import resolveVersions from 'node-resolve-versions';
 const VERSIONS = resolveVersions.sync('>=0.8', { range: 'major,even' });
-// VERSIONS.splice(0, VERSIONS.length, 'v0.8.28')
+VERSIONS.splice(0, VERSIONS.length, VERSIONS[0], VERSIONS[VERSIONS.length - 1]); // TEST SIMPLIFICATIOn
 
 import validate from '../lib/validate';
 
@@ -52,8 +52,8 @@ function addTests(versions) {
 }
 
 describe('multiple', () => {
-  before((cb) => rimraf2(TMP_DIR, { disableGlob: true }, cb.bind(null, null)));
-  after((cb) => rimraf2(TMP_DIR, { disableGlob: true }, cb.bind(null, null)));
+  before(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+  after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
   addTests(VERSIONS.join(','));
 });
