@@ -43,10 +43,10 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "function-exec-sync": "^1.2.12",
+    "function-exec-sync": "^1.2.13",
     "homedir-polyfill": "^1.0.3",
-    "node-install-release": "^1.10.25",
-    "node-resolve-versions": "^1.0.22",
+    "node-install-release": "^1.10.26",
+    "node-resolve-versions": "^1.0.23",
     "queue-cb": "^1.4.13"
   },
   "devDependencies": {
