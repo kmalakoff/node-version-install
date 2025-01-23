@@ -43,11 +43,11 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "function-exec-sync": "^1.2.15",
+    "function-exec-sync": "^1.2.16",
     "homedir-polyfill": "^1.0.3",
     "node-install-release": "^1.10.29",
-    "node-resolve-versions": "^1.0.23",
-    "queue-cb": "^1.4.13"
+    "node-resolve-versions": "^1.0.24",
+    "queue-cb": "^1.4.14"
   },
   "devDependencies": {
     "@types/mocha": "*",
