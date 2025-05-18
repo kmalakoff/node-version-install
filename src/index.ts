@@ -1,7 +1,7 @@
-import worker from './workers/install';
-import workerSync from './workers/installSync';
+import worker from './workers/install.js';
+import workerSync from './workers/installSync.js';
 
-import type { InstallCallback, InstallOptions, InstallResult } from './types';
+import type { InstallCallback, InstallOptions, InstallResult } from './types.js';
 
 export type * from './types';
 export default function install(versionExpression: string, options?: InstallOptions, callback?: InstallCallback): undefined | Promise<InstallResult[]> {
