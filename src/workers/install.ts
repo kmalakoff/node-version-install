@@ -9,7 +9,7 @@ const DEFAULT_STORAGE_PATH = path.join(home(), '.nvu');
 import Module from 'module';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
-import type { InstallOptions, InstallResult } from '../types';
+import type { InstallOptions, InstallResult } from '../types.js';
 
 export default function installWorker(versionExpression: string, options: InstallOptions, callback) {
   const storagePath = options.storagePath || DEFAULT_STORAGE_PATH;
