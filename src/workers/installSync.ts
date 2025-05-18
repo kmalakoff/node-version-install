@@ -12,7 +12,7 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 const SLEEP_MS = 200;
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
 const dist = path.join(__dirname, '..', '..');
-const workerPath = path.join(dist, 'cjs', 'workers', 'install.cjs');
+const workerPath = path.join(dist, 'cjs', 'workers', 'install.js');
 
 export default function installSyncWorker(versionExpression: string, options) {
   try {
