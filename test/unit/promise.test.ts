@@ -20,7 +20,7 @@ const OPTIONS = {
   arch: 'x64' as NodeJS.Architecture,
 };
 
-import resolveVersions from 'node-resolve-versions';
+import * as resolveVersions from 'node-resolve-versions';
 const VERSIONS = resolveVersions.sync('>=0.8', { range: 'major,even' });
 VERSIONS.splice(0, VERSIONS.length, VERSIONS[0], VERSIONS[VERSIONS.length - 1]); // TEST SIMPLIFICATIOn
 
