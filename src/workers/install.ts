@@ -1,12 +1,13 @@
 import fs from 'fs';
+import home from 'homedir-polyfill';
+import { createResult } from 'node-install-release';
 import path from 'path';
 import Queue from 'queue-cb';
 
-import home from 'homedir-polyfill';
-import { createResult } from 'node-install-release';
 const DEFAULT_STORAGE_PATH = path.join(home(), '.nvu');
 
 import Module from 'module';
+
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
 import type { InstallOptions, InstallResult } from '../types.js';
