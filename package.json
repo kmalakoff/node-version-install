@@ -38,7 +38,7 @@
   ],
   "scripts": {
     "build": "tsds build",
-    "format": "biome check --write --unsafe src/ test/",
+    "format": "biome check --write --unsafe",
     "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines npm run test",
     "version": "tsds version"
@@ -46,7 +46,7 @@
   "dependencies": {
     "function-exec-sync": "^1.2.27",
     "homedir-polyfill": "^1.0.3",
-    "node-install-release": "^1.11.9",
+    "node-install-release": "^1.11.10",
     "node-resolve-versions": "^1.0.46",
     "queue-cb": "^1.5.2"
   },

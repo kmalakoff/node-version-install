@@ -2,11 +2,11 @@
 delete process.env.NODE_OPTIONS;
 
 import assert from 'assert';
-import path from 'path';
-import url from 'url';
 import cr from 'cr';
 import isVersion from 'is-version';
+import path from 'path';
 import rimraf2 from 'rimraf2';
+import url from 'url';
 
 const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
 const NODE = isWindows ? 'node.exe' : 'node';
@@ -20,15 +20,15 @@ const OPTIONS = {
 };
 
 import * as resolveVersions from 'node-resolve-versions';
+
 const VERSIONS = resolveVersions.sync('>=0.8', { range: 'major,even' });
 VERSIONS.splice(0, VERSIONS.length, VERSIONS[0], VERSIONS[VERSIONS.length - 1]); // TEST SIMPLIFICATIOn
 
 import spawn from 'cross-spawn-cb';
-import { spawnOptions } from 'node-version-utils';
-import validate from '../lib/validate';
-
 // @ts-ignore
 import { sync as installSync } from 'node-version-install';
+import { spawnOptions } from 'node-version-utils';
+import validate from '../lib/validate';
 
 function addTests(version) {
   describe(version, () => {
