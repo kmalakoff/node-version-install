@@ -6,8 +6,7 @@ import Pinkie from 'pinkie-promise';
 import rimraf2 from 'rimraf2';
 import url from 'url';
 
-const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
-const _NODE = isWindows ? 'node.exe' : 'node';
+const _isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.join(path.join(__dirname, '..', '..', '.tmp'));
@@ -24,20 +23,19 @@ VERSIONS.splice(0, VERSIONS.length, VERSIONS[0], VERSIONS[VERSIONS.length - 1]);
 
 // @ts-ignore
 import install from 'node-version-install';
-import validate from '../lib/validate';
+import validate from '../lib/validate.ts';
 
 function addTests(versions) {
   describe(`${versions}`, () => {
     (() => {
       // patch and restore promise
-      // @ts-ignore
-      let rootPromise: Promise;
+      if (typeof global === 'undefined') return;
+      const globalPromise = global.Promise;
       before(() => {
-        rootPromise = global.Promise;
         global.Promise = Pinkie;
       });
       after(() => {
-        global.Promise = rootPromise;
+        global.Promise = globalPromise;
       });
     })();
 

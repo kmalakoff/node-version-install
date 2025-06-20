@@ -28,7 +28,7 @@ import spawn from 'cross-spawn-cb';
 // @ts-ignore
 import install from 'node-version-install';
 import { spawnOptions } from 'node-version-utils';
-import validate from '../lib/validate';
+import validate from '../lib/validate.ts';
 
 function addTests(version) {
   describe(version, () => {
