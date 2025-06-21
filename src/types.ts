@@ -6,6 +6,7 @@ export interface InstallResult extends InstallResultBase {
 
 export interface InstallOptions extends InstallOptionsBase {
   concurrency?: number;
+  silent?: boolean;
 }
 
 export type InstallCallback = (err?: Error, results?: InstallResult[]) => void;
