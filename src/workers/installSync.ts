@@ -15,7 +15,9 @@ const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLTo
 const dist = path.join(__dirname, '..', '..');
 const workerPath = path.join(dist, 'cjs', 'workers', 'install.js');
 
-export default function installSyncWorker(versionExpression: string, options) {
+import type { InstallOptions, InstallResult } from '../types.ts';
+
+export default function installSyncWorker(versionExpression: string, options: InstallOptions): InstallResult[] {
   try {
     const versions = _require('node-resolve-versions').sync(versionExpression, options);
     if (!versions.length) throw new Error(`No versions found from expression: ${versionExpression}`);
