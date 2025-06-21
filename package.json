@@ -1,6 +1,6 @@
 {
   "name": "node-version-install",
-  "version": "1.2.15",
+  "version": "1.2.16",
   "description": "Install NodeJs by version string asynchronously or synchronously",
   "keywords": [
     "node",
