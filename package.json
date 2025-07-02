@@ -46,7 +46,7 @@
   "dependencies": {
     "function-exec-sync": "^1.4.6",
     "homedir-polyfill": "^1.0.3",
-    "node-install-release": "^1.14.3",
+    "node-install-release": "^1.14.4",
     "node-resolve-versions": "^1.3.2",
     "queue-cb": "^1.5.5"
   },
