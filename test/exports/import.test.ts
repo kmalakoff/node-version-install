@@ -1,6 +1,5 @@
 import assert from 'assert';
 
-// @ts-ignore
 import install, { sync } from 'node-version-install';
 
 describe('exports .ts', () => {
