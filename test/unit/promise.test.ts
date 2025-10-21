@@ -26,7 +26,6 @@ const VERSIONS = resolveVersions.sync('>=0.8', { range: 'major,even' }) as strin
 VERSIONS.splice(0, VERSIONS.length, VERSIONS[0], VERSIONS[VERSIONS.length - 1]); // TEST SIMPLIFICATIOn
 
 import spawn from 'cross-spawn-cb';
-// @ts-ignore
 import install from 'node-version-install';
 import { spawnOptions } from 'node-version-utils';
 import validate from '../lib/validate.ts';
