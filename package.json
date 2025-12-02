@@ -39,7 +39,8 @@
   "scripts": {
     "build": "tsds build",
     "format": "biome check --write --unsafe",
-    "test": "mocha --no-timeouts test/**/*.test.*",
+    "prepublishOnly": "tsds validate",
+    "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines tsds test:node --no-timeouts",
     "version": "tsds version"
   },
@@ -51,14 +52,17 @@
     "queue-cb": "*"
   },
   "devDependencies": {
+    "@biomejs/biome": "*",
     "@types/mocha": "*",
     "@types/node": "*",
     "cr": "*",
     "cross-spawn-cb": "*",
     "is-version": "*",
+    "node-version-use": "*",
     "node-version-utils": "*",
     "pinkie-promise": "*",
-    "rimraf2": "*"
+    "rimraf2": "*",
+    "ts-dev-stack": "*"
   },
   "engines": {
     "node": ">=0.8"
