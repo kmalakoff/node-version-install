@@ -1,1 +1,1 @@
-ignores: ["node-version-install", "function-exec-sync", "node-install-release", "node-resolve-versions", "node-version-utils"]
+ignores: ["node-version-use", "ts-dev-stack", "@biomejs/biome", "node-version-install", "function-exec-sync", "node-install-release", "node-resolve-versions", "node-version-utils"]
