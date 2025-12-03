@@ -1,12 +1,12 @@
 import fs from 'fs';
-import home from 'homedir-polyfill';
 import { createResult } from 'node-install-release';
 import type resolveVersions from 'node-resolve-versions';
 import type { VersionOptions } from 'node-resolve-versions';
 import path from 'path';
 import Queue from 'queue-cb';
+import { homedir } from '../compat.ts';
 
-const DEFAULT_STORAGE_PATH = path.join(home(), '.nvu');
+const DEFAULT_STORAGE_PATH = path.join(homedir(), '.nvu');
 
 import Module from 'module';
 
