@@ -1,10 +1,10 @@
 import fs from 'fs';
-import home from 'homedir-polyfill';
 import { createResult } from 'node-install-release';
 import path from 'path';
 import url from 'url';
+import { homedir } from '../compat.ts';
 
-const DEFAULT_STORAGE_PATH = path.join(home(), '.nvu');
+const DEFAULT_STORAGE_PATH = path.join(homedir(), '.nvu');
 
 import Module from 'module';
 
