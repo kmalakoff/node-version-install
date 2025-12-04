@@ -3,9 +3,9 @@ delete process.env.NODE_OPTIONS;
 
 import assert from 'assert';
 import cr from 'cr';
+import { safeRm } from 'fs-remove-compat';
 import isVersion from 'is-version';
 import path from 'path';
-import rimraf2 from 'rimraf2';
 import url from 'url';
 
 const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
@@ -67,8 +67,8 @@ function addTests(version) {
 }
 
 describe('sync', () => {
-  before(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
-  after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+  before((cb) => safeRm(TMP_DIR, cb));
+  after((cb) => safeRm(TMP_DIR, cb));
 
   describe('happy path', () => {
     for (let i = 0; i < VERSIONS.length; i++) {
