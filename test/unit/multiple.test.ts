@@ -1,9 +1,9 @@
 // remove NODE_OPTIONS from ts-dev-stack
 delete process.env.NODE_OPTIONS;
 
+import { safeRm } from 'fs-remove-compat';
 import path from 'path';
 import Pinkie from 'pinkie-promise';
-import rimraf2 from 'rimraf2';
 import url from 'url';
 
 const _isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
@@ -49,8 +49,8 @@ function addTests(versions) {
 }
 
 describe('multiple', () => {
-  before(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
-  after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+  before((cb) => safeRm(TMP_DIR, cb));
+  after((cb) => safeRm(TMP_DIR, cb));
 
   addTests(VERSIONS.join(','));
 });
