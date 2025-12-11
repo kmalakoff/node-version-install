@@ -1,4 +1,4 @@
-// remove NODE_OPTIONS from ts-dev-stack
+// remove NODE_OPTIONS to not interfere with tests
 delete process.env.NODE_OPTIONS;
 
 import assert from 'assert';
@@ -42,7 +42,7 @@ function addTests(version) {
     it('npm --version', (done) => {
       spawn('npm', ['--version'], spawnOptions(installPath, { encoding: 'utf8' }), (err, res) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         const lines = cr(res.stdout).split('\n');
@@ -55,7 +55,7 @@ function addTests(version) {
     it('node --version', (done) => {
       spawn(NODE, ['--version'], spawnOptions(installPath, { encoding: 'utf8' }), (err, res) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         const lines = cr(res.stdout).split('\n');
