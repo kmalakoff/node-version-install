@@ -1,24 +1,20 @@
-import fs from 'fs';
-import { createResult } from 'node-install-release';
-import type resolveVersions from 'node-resolve-versions';
-import type { VersionOptions } from 'node-resolve-versions';
+import Module from 'module';
 import path from 'path';
 import Queue from 'queue-cb';
 import { homedir } from '../compat.ts';
-
-const DEFAULT_STORAGE_PATH = path.join(homedir(), '.nvu');
-
-import Module from 'module';
-
-const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-
 import type { InstallCallback, InstallOptions, InstallResult } from '../types.ts';
 
+const DEFAULT_STORAGE_PATH = path.join(homedir(), '.nvu');
+const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
+
+let resolveVersionsFn = null; // break dependencies
+let installReleaseFn = null; // break dependencies
 export default function installWorker(versionExpression: string, options: InstallOptions, callback: InstallCallback): void {
   const storagePath = options.storagePath || DEFAULT_STORAGE_PATH;
   options = { storagePath, ...options };
 
-  (_require('node-resolve-versions') as typeof resolveVersions)(versionExpression, options as VersionOptions, (err, versions): undefined => {
+  if (!resolveVersionsFn) resolveVersionsFn = _require('node-resolve-versions');
+  resolveVersionsFn(versionExpression, options, (err, versions): undefined => {
     if (err) {
       callback(err);
       return;
@@ -33,13 +29,14 @@ export default function installWorker(versionExpression: string, options: Instal
     versions.forEach((version) => {
       queue.defer((cb) => {
         const versionOptions = { name: version, ...options };
-        const result = createResult(versionOptions as InstallOptions, version as string);
+        if (!installReleaseFn) installReleaseFn = _require('node-install-release');
+        const result = installReleaseFn.createResult(versionOptions as InstallOptions, version as string);
 
-        function done(error?) {
+        // Always call node-install-release - it will check what's missing (node, npm, or both)
+        installReleaseFn(version, versionOptions, (error?) => {
           results.push({ ...result, error });
           cb();
-        }
-        fs.stat(result.execPath, (_, stat) => (stat ? done() : _require('node-install-release')(version, versionOptions, done)));
+        });
       });
     });
     queue.await((err) => (err ? callback(err) : callback(null, results)));
