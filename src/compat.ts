@@ -4,12 +4,12 @@
  */
 import os from 'os';
 
-var hasHomedir = typeof os.homedir === 'function';
+const hasHomedir = typeof os.homedir === 'function';
 
 export function homedir(): string {
   if (hasHomedir) {
     return os.homedir();
   }
-  var home = require('homedir-polyfill');
+  const home = require('homedir-polyfill');
   return home();
 }
