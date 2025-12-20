@@ -14,11 +14,8 @@ export default function installWorker(versionExpression: string, options: Instal
   options = { storagePath, ...options };
 
   if (!resolveVersionsFn) resolveVersionsFn = _require('node-resolve-versions');
-  resolveVersionsFn(versionExpression, options, (err, versions): undefined => {
-    if (err) {
-      callback(err);
-      return;
-    }
+  resolveVersionsFn(versionExpression, options, (err, versions): void => {
+    if (err) return callback(err);
     if (!versions.length) {
       callback(new Error(`No versions found from expression: ${versionExpression}`));
       return;
