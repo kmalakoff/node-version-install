@@ -9,7 +9,7 @@ import path from 'path';
 import Pinkie from 'pinkie-promise';
 import url from 'url';
 
-const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
+const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE ?? '');
 const NODE = isWindows ? 'node.exe' : 'node';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
@@ -30,7 +30,7 @@ import install from 'node-version-install';
 import { spawnOptions } from 'node-version-utils';
 import validate from '../lib/validate.ts';
 
-function addTests(version) {
+function addTests(version: string) {
   describe(version, () => {
     (() => {
       // patch and restore promise
@@ -44,21 +44,18 @@ function addTests(version) {
       });
     })();
 
-    let installPath = null;
+    let installPath: string | null = null;
     it('install', async () => {
       const res = await install(version, { name: version, ...OPTIONS });
       if (res) installPath = res[0].installPath;
       if (res) version = res[0].version;
-      validate(installPath, OPTIONS);
+      validate(installPath as string, OPTIONS);
     });
 
     it('npm --version', (done) => {
-      spawn('npm', ['--version'], spawnOptions(installPath, { encoding: 'utf8' }), (err, res) => {
-        if (err) {
-          done(err);
-          return;
-        }
-        const lines = cr(res.stdout).split('\n');
+      spawn('npm', ['--version'], spawnOptions(installPath as string, { encoding: 'utf8' }), (err, res) => {
+        if (err) return done(err);
+        const lines = cr((res as any).stdout).split('\n');
         const resultVersion = lines.slice(-2, -1)[0];
         assert.ok(isVersion(resultVersion));
         done();
@@ -66,12 +63,9 @@ function addTests(version) {
     });
 
     it('node --version', (done) => {
-      spawn(NODE, ['--version'], spawnOptions(installPath, { encoding: 'utf8' }), (err, res) => {
-        if (err) {
-          done(err);
-          return;
-        }
-        const lines = cr(res.stdout).split('\n');
+      spawn(NODE, ['--version'], spawnOptions(installPath as string, { encoding: 'utf8' }), (err, res) => {
+        if (err) return done(err);
+        const lines = cr((res as any).stdout).split('\n');
         assert.equal(lines.slice(-2, -1)[0], version);
         done();
       });
