@@ -17,13 +17,17 @@ import type { InstallOptions, InstallResult } from '../types.ts';
 // Worker MUST always load from dist/cjs/ for old Node compatibility
 const workerPath = path.join(__dirname, '..', '..', 'cjs', 'workers', 'install.js');
 
-let functionExec = null; // break dependencies
-let resolveVersionsFn = null; // break dependencies
-let createResultFn = null; // break dependencies
+type ResolveVersionsSyncFn = { sync: (expr: string, opts: InstallOptions) => string[] };
+type CreateResultFn = (opts: object, version: string) => InstallResult;
+type FunctionExecFn = (opts: object, workerPath: string, ...args: unknown[]) => unknown;
+
+let functionExec: FunctionExecFn | null = null; // break dependencies
+let resolveVersionsFn: ResolveVersionsSyncFn | null = null; // break dependencies
+let createResultFn: CreateResultFn | null = null; // break dependencies
 export default function installSyncWorker(versionExpression: string, options: InstallOptions): InstallResult[] {
   try {
-    if (!resolveVersionsFn) resolveVersionsFn = _require('node-resolve-versions');
-    const versions = resolveVersionsFn.sync(versionExpression, options);
+    if (!resolveVersionsFn) resolveVersionsFn = _require('node-resolve-versions') as ResolveVersionsSyncFn;
+    const versions = resolveVersionsFn?.sync(versionExpression, options);
     if (!versions.length) throw new Error(`No versions found from expression: ${versionExpression}`);
 
     // shortcut to not spawn a worker if it's a simple case
@@ -32,14 +36,14 @@ export default function installSyncWorker(versionExpression: string, options: In
       const storagePath = options.storagePath || DEFAULT_STORAGE_PATH;
       options = { storagePath, ...options };
 
-      if (!createResultFn) createResultFn = _require('node-install-release').createResult;
-      const result = createResultFn({ name: version, ...options }, version);
+      if (!createResultFn) createResultFn = (_require('node-install-release') as { createResult: CreateResultFn }).createResult;
+      const result = createResultFn?.({ name: version, ...options }, version);
 
       fs.statSync(result.execPath);
       return [result];
     }
   } catch (_) {}
 
-  if (!functionExec) functionExec = _require('function-exec-sync');
-  return functionExec({ cwd: process.cwd(), sleep: SLEEP_MS, callbacks: true }, workerPath, versionExpression, options);
+  if (!functionExec) functionExec = _require('function-exec-sync') as FunctionExecFn;
+  return functionExec?.({ cwd: process.cwd(), sleep: SLEEP_MS, callbacks: true }, workerPath, versionExpression, options) as InstallResult[];
 }

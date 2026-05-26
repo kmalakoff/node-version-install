@@ -7,35 +7,38 @@ import type { InstallCallback, InstallOptions, InstallResult } from '../types.ts
 const DEFAULT_STORAGE_PATH = path.join(homedir(), '.nvu');
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
-let resolveVersionsFn = null; // break dependencies
-let installReleaseFn = null; // break dependencies
+type ResolveVersionsFn = (expr: string, opts: InstallOptions, cb: (err?: Error, versions?: string[]) => void) => void;
+type InstallReleaseFn = ((version: string, opts: object, cb: (error?: Error) => void) => void) & { createResult: (opts: object, version: string) => InstallResult };
+
+let resolveVersionsFn: ResolveVersionsFn | null = null; // break dependencies
+let installReleaseFn: InstallReleaseFn | null = null; // break dependencies
 export default function installWorker(versionExpression: string, options: InstallOptions, callback: InstallCallback): void {
   const storagePath = options.storagePath || DEFAULT_STORAGE_PATH;
   options = { storagePath, ...options };
 
-  if (!resolveVersionsFn) resolveVersionsFn = _require('node-resolve-versions');
-  resolveVersionsFn(versionExpression, options, (err, versions): void => {
+  if (!resolveVersionsFn) resolveVersionsFn = _require('node-resolve-versions') as ResolveVersionsFn;
+  resolveVersionsFn?.(versionExpression, options, (err?: Error, versions?: string[]): void => {
     if (err) return callback(err);
-    if (!versions.length) {
+    if (!versions || !versions.length) {
       callback(new Error(`No versions found from expression: ${versionExpression}`));
       return;
     }
 
     const results: InstallResult[] = [];
     const queue = new Queue(options.concurrency || 1);
-    versions.forEach((version) => {
+    versions.forEach((version: string) => {
       queue.defer((cb) => {
         const versionOptions = { name: version, ...options };
-        if (!installReleaseFn) installReleaseFn = _require('node-install-release');
-        const result = installReleaseFn.createResult(versionOptions as InstallOptions, version as string);
+        if (!installReleaseFn) installReleaseFn = _require('node-install-release') as InstallReleaseFn;
+        const result = installReleaseFn?.createResult(versionOptions as InstallOptions, version as string);
 
         // Always call node-install-release - it will check what's missing (node, npm, or both)
-        installReleaseFn(version, versionOptions, (error?) => {
+        installReleaseFn?.(version, versionOptions, (error?: Error) => {
           results.push({ ...result, error });
           cb();
         });
       });
     });
-    queue.await((err) => (err ? callback(err) : callback(null, results)));
+    queue.await((err) => (err ? callback(err) : callback(undefined, results)));
   });
 }
