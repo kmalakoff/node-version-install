@@ -7,8 +7,8 @@ import type { InstallCallback, InstallOptions, InstallResult } from '../types.ts
 const DEFAULT_STORAGE_PATH = path.join(homedir(), '.nvu');
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
-type ResolveVersionsFn = (expr: string, opts: InstallOptions, cb: (err?: Error, versions?: string[]) => void) => void;
-type InstallReleaseFn = ((version: string, opts: object, cb: (error?: Error) => void) => void) & { createResult: (opts: object, version: string) => InstallResult };
+type ResolveVersionsFn = (expr: string, opts: InstallOptions, cb: (err?: Error | null, versions?: string[]) => void) => void;
+type InstallReleaseFn = ((version: string, opts: object, cb: (error?: Error | null) => void) => void) & { createResult: (opts: object, version: string) => InstallResult };
 
 let resolveVersionsFn: ResolveVersionsFn | null = null; // break dependencies
 let installReleaseFn: InstallReleaseFn | null = null; // break dependencies
@@ -17,7 +17,7 @@ export default function installWorker(versionExpression: string, options: Instal
   options = { storagePath, ...options };
 
   if (!resolveVersionsFn) resolveVersionsFn = _require('node-resolve-versions') as ResolveVersionsFn;
-  resolveVersionsFn?.(versionExpression, options, (err?: Error, versions?: string[]): void => {
+  resolveVersionsFn?.(versionExpression, options, (err?: Error | null, versions?: string[]): void => {
     if (err) return callback(err);
     if (!versions || !versions.length) {
       callback(new Error(`No versions found from expression: ${versionExpression}`));
@@ -33,8 +33,8 @@ export default function installWorker(versionExpression: string, options: Instal
         const result = installReleaseFn?.createResult(versionOptions as InstallOptions, version as string);
 
         // Always call node-install-release - it will check what's missing (node, npm, or both)
-        installReleaseFn?.(version, versionOptions, (error?: Error) => {
-          results.push({ ...result, error });
+        installReleaseFn?.(version, versionOptions, (error?: Error | null) => {
+          results.push({ ...result, error: error ?? undefined });
           cb();
         });
       });
