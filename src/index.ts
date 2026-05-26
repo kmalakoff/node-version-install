@@ -13,7 +13,7 @@ export default function install(versionExpression: string, options?: InstallOpti
   options = typeof options === 'function' ? {} : ((options || {}) as InstallOptions);
 
   if (typeof callback === 'function') return worker(versionExpression, options, callback);
-  return new Promise((resolve, reject) => worker(versionExpression, options, (err, result) => (err ? reject(err) : resolve(result))));
+  return new Promise((resolve, reject) => worker(versionExpression, options, (err, result) => (err ? reject(err) : resolve(result!))));
 }
 
 export function sync(versionExpression: string, options?: InstallOptions): InstallResult[] {
