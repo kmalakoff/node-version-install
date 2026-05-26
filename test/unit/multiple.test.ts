@@ -6,7 +6,7 @@ import path from 'path';
 import Pinkie from 'pinkie-promise';
 import url from 'url';
 
-const _isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
+const _isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE ?? '');
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.join(path.join(__dirname, '..', '..', '.tmp'));
@@ -24,7 +24,7 @@ VERSIONS.splice(0, VERSIONS.length, VERSIONS[0], VERSIONS[VERSIONS.length - 1]);
 import install from 'node-version-install';
 import validate from '../lib/validate.ts';
 
-function addTests(versions) {
+function addTests(versions: string) {
   describe(`${versions}`, () => {
     (() => {
       // patch and restore promise

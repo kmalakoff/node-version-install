@@ -2,7 +2,7 @@ import assert from 'assert';
 import fs from 'fs';
 import path from 'path';
 
-const existsSync = (test) => {
+const existsSync = (test: string) => {
   try {
     (fs.accessSync || fs.statSync)(test);
     return true;
@@ -25,19 +25,19 @@ const NPM_FILE_PATHS = {
   posix: [path.join('bin', 'npm'), path.join('lib', 'node_modules', 'npm')],
 };
 
-export default function validate(installPath: string, target) {
+export default function validate(installPath: string, target: { filename?: string; platform?: string; arch?: string }) {
   let { filename, platform } = target;
   if (filename) {
     const filePlatform = filename.split('-')[0];
-    platform = ['headers', 'src'].indexOf(filePlatform) >= 0 ? process.platform : FILE_PLATFORM_MAP[filePlatform] || filePlatform;
+    platform = ['headers', 'src'].indexOf(filePlatform) >= 0 ? process.platform : (FILE_PLATFORM_MAP as Record<string, string>)[filePlatform] || (filePlatform as string);
   }
   if (!platform) platform = process.platform;
 
-  const nodePath = NODE_FILE_PATHS[platform] || NODE_FILE_PATHS.posix;
+  const nodePath = (NODE_FILE_PATHS as Record<string, string>)[platform] || NODE_FILE_PATHS.posix;
   assert.ok(existsSync(path.join(installPath, nodePath)), `${path.join(installPath, nodePath)} ${fs.readdirSync(path.dirname(path.join(installPath, nodePath)))}`);
 
-  const npmPaths = NPM_FILE_PATHS[platform] || NPM_FILE_PATHS.posix;
-  npmPaths.forEach((npmPath) => {
+  const npmPaths = (NPM_FILE_PATHS as Record<string, string[]>)[platform] || NPM_FILE_PATHS.posix;
+  npmPaths.forEach((npmPath: string) => {
     assert.ok(existsSync(path.join(installPath, npmPath)), `${path.join(installPath, npmPath)} ${fs.readdirSync(path.dirname(path.join(installPath, npmPath)))}`);
   });
 }
