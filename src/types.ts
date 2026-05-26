@@ -9,4 +9,4 @@ export interface InstallOptions extends InstallOptionsBase {
   silent?: boolean;
 }
 
-export type InstallCallback = (err?: Error, results?: InstallResult[]) => void;
+export type InstallCallback = (err?: Error | null, results?: InstallResult[]) => void;
