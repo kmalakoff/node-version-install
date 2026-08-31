@@ -1,15 +1,7 @@
 import assert from 'assert';
 import fs from 'fs';
 import path from 'path';
-
-const existsSync = (test: string) => {
-  try {
-    (fs.accessSync || fs.statSync)(test);
-    return true;
-  } catch (_) {
-    return false;
-  }
-};
+import { existsSync } from './compat.ts';
 
 const FILE_PLATFORM_MAP = {
   win: 'win32',

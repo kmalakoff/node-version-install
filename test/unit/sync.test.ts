@@ -42,7 +42,7 @@ function addTests(version: string) {
     it('npm --version', (done) => {
       spawn('npm', ['--version'], spawnOptions(installPath as string, { encoding: 'utf8' }), (err, res) => {
         if (err) return done(err);
-        const lines = cr((res as any).stdout).split('\n');
+        const lines = cr((res as { stdout: string }).stdout).split('\n');
         const resultVersion = lines.slice(-2, -1)[0];
         assert.ok(isVersion(resultVersion));
         done();
@@ -52,7 +52,7 @@ function addTests(version: string) {
     it('node --version', (done) => {
       spawn(NODE, ['--version'], spawnOptions(installPath as string, { encoding: 'utf8' }), (err, res) => {
         if (err) return done(err);
-        const lines = cr((res as any).stdout).split('\n');
+        const lines = cr((res as { stdout: string }).stdout).split('\n');
         assert.equal(lines.slice(-2, -1)[0], version);
         done();
       });
