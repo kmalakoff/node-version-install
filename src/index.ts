@@ -3,7 +3,7 @@ import workerSync from './workers/installSync.js';
 
 import type { InstallCallback, InstallOptions, InstallResult } from './types.js';
 
-export type * from './types';
+export type * from './types.js';
 export default function install(versionExpression: string, options?: InstallOptions, callback?: InstallCallback): undefined | Promise<InstallResult[]> {
   if (typeof options === 'function') {
     callback = options as InstallCallback;
