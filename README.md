@@ -1,28 +1,29 @@
-## node-version-install
+# node-version-install
 
-Install NodeJs by version string asynchronously or synchronously.
+Install one or more released Node.js versions by a version string. The installer downloads releases and returns their installed paths.
 
-### Example 1: Asynchronous Install
+## Install
 
-```typescript
-import install from "node-version-install";
-
-const result = await install("12", "/path/for/install");
-console.log(result); // { version: "12.3.4", execPath, installPath }
+```sh
+npm install node-version-install
 ```
 
-### Example 2: Synchronous Install
+## Asynchronous install
 
-```typescript
+```js
+import install from 'node-version-install';
 
-import install from "node-version-install";
-
-const call = require("node-version-install");
-
-const result = install("14,stable", "/path/for/install");
-console.log(result); // [{ version: "14.4.5", execPath, installPath }, { version: "22.2.1", execPath, installPath }]
+const result = await install('12', { storagePath: '/path/for/install' });
+console.log(result); // [{ version, execPath, installPath, ... }]
 ```
 
-### Documentation
+## Synchronous install
 
-[API Docs](https://kmalakoff.github.io/node-version-install/)
+```js
+import { sync as installSync } from 'node-version-install';
+
+const result = installSync('14', { storagePath: '/path/for/install' });
+console.log(result); // [{ version, execPath, installPath, ... }]
+```
+
+Use an options object such as `{ storagePath }` to choose where versions are installed. See the [API docs](https://kmalakoff.github.io/node-version-install/) for callbacks and other options.
