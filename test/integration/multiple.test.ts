@@ -12,6 +12,7 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 const TMP_DIR = path.join(path.join(__dirname, '..', '..', '.tmp'));
 const OPTIONS = {
   storagePath: path.join(TMP_DIR),
+  cachePath: CACHE_PATH,
   platform: process.platform,
   arch: 'x64' as NodeJS.Architecture,
 };
@@ -22,6 +23,7 @@ const VERSIONS = resolveVersions.sync('>=0.8', { range: 'major,even' }) as strin
 VERSIONS.splice(0, VERSIONS.length, VERSIONS[0], VERSIONS[VERSIONS.length - 1]); // TEST SIMPLIFICATIOn
 
 import install from 'node-version-install';
+import { CACHE_PATH } from '../lib/constants.ts';
 import validate from '../lib/validate.ts';
 
 function addTests(versions: string) {

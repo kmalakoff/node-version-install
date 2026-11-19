@@ -15,6 +15,7 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 const TMP_DIR = path.join(path.join(__dirname, '..', '..', '.tmp'));
 const OPTIONS = {
   storagePath: path.join(TMP_DIR),
+  cachePath: CACHE_PATH,
   platform: process.platform,
   arch: 'x64' as NodeJS.Architecture,
 };
@@ -27,6 +28,7 @@ VERSIONS.splice(0, VERSIONS.length, VERSIONS[0], VERSIONS[VERSIONS.length - 1]);
 import spawn from 'cross-spawn-cb';
 import { sync as installSync } from 'node-version-install';
 import { spawnOptions } from 'node-version-utils';
+import { CACHE_PATH } from '../lib/constants.ts';
 import validate from '../lib/validate.ts';
 
 function addTests(version: string) {
